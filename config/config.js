@@ -13,4 +13,5 @@ module.exports = {
     uri: process.env.MONGO_URI,
     name: process.env.MONGO_DB_NAME,
   },
+  trading_script_code : "NSE_FO|43912",
 };
