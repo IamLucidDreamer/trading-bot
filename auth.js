@@ -6,6 +6,8 @@ const {
   client_secret,
   base_url,
 } = require("./config/config");
+const logger = require("./utils/logger");
+const { setToken } = require("./utils/tokenStore");
 
 const startURL = `https://api.upstox.com/v2/login/authorization/dialog?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}`;
 
@@ -25,15 +27,13 @@ const openDialogAndGrantAccess = async () => {
   const redirectedURL = page.url();
   const codeForLogin = redirectedURL.split("=")[1];
 
-  console.log("Redirected URL:", redirectedURL, codeForLogin);
+  logger.info("Redirected URL:", redirectedURL, codeForLogin);
   await browser.close();
 
   dataAuthToken.code = codeForLogin;
   getAccessToken(dataAuthToken);
   return 1;
 };
-
-openDialogAndGrantAccess();
 
 const url = `${base_url}/v2/login/authorization/token`;
 const headers = {
@@ -46,11 +46,13 @@ const getAccessToken = (data) => {
     .post(url, new URLSearchParams(data), { headers })
     .then((response) => {
       if (response.status >= 200 && response.status < 300) {
-        console.log(response.data);
+        setToken(response.data.access_token);
+        logger.info("Access token set successfully");
       }
     })
     .catch((error) => {
-      console.error(error?.response?.status);
-      console.error(error);
+      logger.error(error);
     });
 };
+
+module.exports = { openDialogAndGrantAccess };
