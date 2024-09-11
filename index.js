@@ -3,6 +3,9 @@ const { connect } = require("./config/db");
 const logger = require("./utils/logger");
 const { openDialogAndGrantAccess } = require("./auth");
 const { getToken } = require("./utils/tokenStore");
+const {
+  webscoketConnection,
+} = require("./websocket/market_data/websocket_client");
 
 const startBot = async () => {
   try {
@@ -11,10 +14,14 @@ const startBot = async () => {
         logger.info("Connected to MongoDB");
         const accessToken = await getToken();
         if (!accessToken) {
-          console.log("No access token found. Opening dialog to grant access...");
-          openDialogAndGrantAccess();
+          console.log(
+            "No access token found. Opening dialog to grant access..."
+          );
+          await openDialogAndGrantAccess();
+          initializeBot();
+        } else {
+          initializeBot();
         }
-        console.log(accessToken);
       })
       .catch((err) => {
         console.error("Failed to connect to MongoDB:", err);
@@ -27,3 +34,8 @@ const startBot = async () => {
 };
 
 startBot();
+
+const initializeBot = () => {
+  logger.info("Initializing bot...");
+  webscoketConnection("NSE_FP|7C48444");
+};

@@ -23,12 +23,14 @@ const openDialogAndGrantAccess = async () => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   await page.goto(startURL);
+  logger.info("Opening dialog for granting access...");
   await page.waitForNavigation({ waitUntil: "networkidle0" });
+  logger.info("Dialog opened");
   const redirectedURL = page.url();
+  logger.info("Redirected URL:", redirectedURL);
   const codeForLogin = redirectedURL.split("=")[1];
-
-  logger.info("Redirected URL:", redirectedURL, codeForLogin);
   await browser.close();
+  logger.info("Code for login:", codeForLogin);
 
   dataAuthToken.code = codeForLogin;
   getAccessToken(dataAuthToken);
@@ -42,6 +44,7 @@ const headers = {
 };
 
 const getAccessToken = (data) => {
+  logger.info("Getting access token...");
   axios
     .post(url, new URLSearchParams(data), { headers })
     .then((response) => {
