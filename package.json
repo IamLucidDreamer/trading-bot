@@ -1,0 +1,23 @@
+{
+  "name": "upstox_api_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "mongodb": "^6.8.1",
+    "nodemon": "^3.1.4",
+    "protobufjs": "^7.3.2",
+    "puppeteer": "^22.15.0",
+    "upstox-js-sdk": "^2.7.0",
+    "winston": "^3.14.2",
+    "ws": "^8.18.0"
+  }
+}
